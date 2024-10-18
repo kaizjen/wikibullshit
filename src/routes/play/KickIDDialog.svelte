@@ -2,6 +2,9 @@
 	.main {
 		padding: 16px;
 	}
+	.warn {
+		color: var(--color-destructive);
+	}
 	.bottom {
 		padding: 8px;
 		display: flex;
@@ -17,6 +20,7 @@
 	export let id: string;
 
 	let loading = false;
+	$: gameInProgress = $gameState.chosenArticle != '';
 
 	const dispatch = createEventDispatcher();
 
@@ -32,6 +36,9 @@
 	<form action="" on:submit|preventDefault={go}>
 		<div class="main">
 			They'll still be able to join if they have the room code.
+			{#if gameInProgress}
+				<div class="warn">Warning: This action will forcefully end the current round.</div>
+			{/if}
 		</div>
 		<div class="bottom">
 			<button disabled={loading} class="destructive" on:click={go}>

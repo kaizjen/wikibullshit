@@ -1,6 +1,8 @@
 <style>
 	.main {
 		padding: 16px;
+	}
+	.destructive {
 		color: var(--color-destructive);
 	}
 	.bottom {
@@ -13,11 +15,13 @@
 	import { createEventDispatcher } from "svelte";
 	import Dialog from "./Dialog.svelte";
 	import { gameState } from "./gamestate";
-	import { kick, transferHost } from "$lib/api";
+	import { transferHost } from "$lib/api";
 
 	export let id: string;
 
 	let loading = false;
+
+	$: gameInProgress = $gameState.chosenArticle != '';
 
 	const dispatch = createEventDispatcher();
 
@@ -31,13 +35,18 @@
 </script>
 <Dialog title="Make {$gameState.users[id].name} the new host?" on:close={() => dispatch('close')}>
 	<form action="" on:submit|preventDefault={go}>
-		<div class="main">
-			Hey, wait, after you transfer the host, you'll just be a regular player, and will have to lie to your friends (evil!).
-			You won't get the host controls unless someone transfers the host back to you.
+		<div class="main" class:destructive={!gameInProgress}>
+			{#if gameInProgress}
+				You cannot transer the host until this round ends.
+				You can click the panic button to end it forcefully (no points will be awarded).
+			{:else}
+				Hey, wait, after you transfer the host, you'll just be a regular player, and will have to lie to your friends (evil!).
+				You won't get the host controls unless someone transfers the host back to you.
+			{/if}
 		</div>
 		<div class="bottom">
-			<button disabled={loading} class="destructive" on:click={go}>
-				{loading ? "Wait" : "Do it!"}
+			<button disabled={loading || gameInProgress} class="destructive" on:click={go}>
+				{gameInProgress ? "Nuh-uh" : (loading ? "Wait" : "Do it!")}
 			</button>
 		</div>
 	</form>

@@ -29,10 +29,12 @@
 <Dialog title="Are you sure?" on:close={() => dispatch('close')}>
 	<form action="" on:submit|preventDefault={go}>
 		<div class="main">
-			Even if you generally know what "{$gameState.chosenArticle}" means,
+			This round will end immediately and no points will be awarded.
+			<hr>
+			P.S. Even if you generally know what "{$gameState.chosenArticle}" means,
 			give the players a chance to explain themselves, becasue this game is about
 			<i>Wikipedia articles</i>, not definitions of words. (Think Apple the company vs Apple the fruit)<br>
-			But it's your call, you're the <s>boss</s> host. 
+			But it's your call, you're the <s>boss</s> host.
 		</div>
 		<div class="bottom">
 			<button disabled={loading} class="destructive" on:click={go}>

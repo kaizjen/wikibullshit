@@ -32,30 +32,47 @@
 		display: flex;
 		justify-content: space-between;
  		align-items: center;
+		gap: 8px;
 		padding: 4px;
 		padding-inline: 8px;
 	}
 	.player.green {
 		background-color: var(--background-color-success-subtle);
+		color: var(--color-content-added); /* TODO: Choose semantically correct values */
+	}
+	.player.red {
+		background-color: var(--background-color-error-subtle);
+  	color: var(--color-error);
 	}
 	.playerinfo {
 		display: flex;
  		align-items: center;
 	}
+	.username {
+		overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    white-space: nowrap;
+	}
 	.otherinfo {
 		display: flex;
 		align-items: center;
 		gap: 16px;
+		flex-shrink: 0;
 	}
 	.readiness {
 		color: var(--color-base--subtle);
 	}
-	.green .readiness {
-		color: var(--color-success);
-	}
 	.tip {
 		color: var(--color-base--subtle);
 		font-size: small;
+		flex-shrink: 0;
+	}
+	.green .readiness, .green .tip {
+		color: var(--color-success);
+	}
+	.red .readiness, .red .tip {
+		color: var(--color-destructive--active); /* TODO: Choose semantically correct values */
 	}
 	.footer {
 		display: flex;
@@ -73,15 +90,7 @@
 	import { changeArticle, gameState, setReady } from "./gamestate";
 	import PanicDialog from "./PanicDialog.svelte";
 
-	let myArticle = $gameState.myArticle;
-	
-	$: if (myArticle == '') {
-		myArticle = $gameState.myArticle
-	}
-
-	$: if (gameInProgress) {
-		myArticle = '';
-	}
+	let FUN = Math.floor(Math.random() * 17);
 
 	$: amIReady = $gameState.users[$gameState.me].ready;
 	let loading = false;
@@ -89,6 +98,16 @@
 	$: gameInProgress = $gameState.chosenArticle != '';
 	$: isEveryoneReady = Object.keys($gameState.users).every(uid => $gameState.users[uid].ready);
 
+	let myArticle = $gameState.myArticle;
+	
+	function setMyArticle() {
+		myArticle = $gameState.myArticle;
+	}
+	$: { gameInProgress; setMyArticle(); }
+
+	$: if (myArticle == '') {
+		myArticle = $gameState.myArticle
+	}
 	let myGuess = '';
 	let correctAnswer = '';
 
@@ -96,6 +115,17 @@
 
 	$: if ($gameState.me != $gameState.host || !gameInProgress) {
 		panicDialog = false;
+	}
+
+	async function readyUp() {
+		if (loading) return;
+
+		loading = true;
+		await setReady(!amIReady)
+		if (amIReady) {
+			await changeArticle(myArticle)
+		}
+		loading = false;		
 	}
 </script>
 <div class="game">
@@ -121,30 +151,24 @@
 			{/if}
 		</h2>
 		{#if $gameState.me != $gameState.host && !gameInProgress}
-			<div class="articleinput">
-				<input disabled={amIReady} type="text" placeholder="" bind:value={myArticle}>
-				<button
-					disabled={myArticle == '' && !amIReady}
-					title={myArticle == '' ? "Hey, you have to put in an article name first, cheater!" : "Click me!!!!!!"}
-					class="button"
-					on:click={async() => {
-						if (loading) return;
-
-						loading = true;
-						await setReady(!amIReady)
-						if (amIReady) {
-							await changeArticle(myArticle)
-						}
-						loading = false;
-					}}
-				>
-					{#if amIReady}
-						WAIT, I'm not ready!!
-					{:else}
-						I'm ready
-					{/if}
-				</button>
-			</div>
+			<form on:submit|preventDefault={readyUp}>
+				<div class="articleinput">
+					<input disabled={amIReady} type="text" placeholder="" bind:value={myArticle}>
+					<button
+						disabled={myArticle == '' && !amIReady}
+						title={myArticle == '' ? "Hey, you have to put in an article name first, cheater!" : "Click me!!!!!!"}
+						class="button"
+						
+						on:click={readyUp}
+					>
+						{#if amIReady}
+							WAIT, I'm not ready!!
+						{:else}
+							I'm ready
+						{/if}
+					</button>
+				</div>
+			</form>
 		{/if}
 		<div class="desc">
 			{#if gameInProgress}
@@ -203,17 +227,30 @@
 					<li>
 						<div
 							class="player"
-							class:green={(myGuess != '' && myGuess == correctAnswer && myGuess == userID) || user.ready}
-							class:red={(myGuess != '' && myGuess != correctAnswer && correctAnswer == userID)}
+							class:green={(myGuess != '' && correctAnswer == userID) || user.ready}
+							class:red={(myGuess != '' && myGuess != correctAnswer && myGuess == userID)}
 						>
 							<div class="playerinfo">
 								<Icon>person</Icon>
-								<b>{user.name}</b>
-								{#if userID == $gameState.me}
-									<i class="tip">
-										☜ Hey, that's you!
-									</i>
-								{/if}
+								<b class="username">{user.name}</b>
+								<i class="tip">
+									{#if myGuess == userID}
+										{#if myGuess == correctAnswer}
+											☜ You guessed correctly!
+										{:else}
+											☜ Liar! (your guess)
+										{/if}
+									{:else if correctAnswer == userID}
+										☜ The truthteller
+									{/if}
+									{#if userID == $gameState.me}
+										{#if $gameState.users[userID].points == FUN}
+											☜ Despite everything, it's still you
+										{:else}
+											☜ Hey, that's you!
+										{/if}
+									{/if}
+								</i>
 							</div>
 							<div class="otherinfo">
 								{#if gameInProgress}
@@ -222,6 +259,8 @@
 											class="hollow"
 											title="Press this button if you think this player is telling the truth!"
 											on:click={async() => {
+												if (loading) return;
+
 												loading = true;
 												let result = await guess($gameState.gameID, $gameState.accessKey, userID);
 												if (!ok(result)) return loading = false;
@@ -229,9 +268,11 @@
 												myGuess = userID;
 												correctAnswer = result.truthteller;
 
+												console.log({ myGuess, correctAnswer });
+
 												setTimeout(() => {
 													myGuess = correctAnswer = '';
-												}, 3000)
+												}, 4000)
 
 												loading = false;
 											}}
@@ -266,10 +307,18 @@
 			</span>
 		{:else if isEveryoneReady}
 			{#if $gameState.host == $gameState.me}
-				<button class="accent" title="AKA the Big Blue Button™" on:click={async() => {
+				<button disabled={loading} class="accent" title="AKA the Big Blue Button™" on:click={async() => {
+					if (loading) return;
+
+					loading = true;
 					await selectArticle($gameState.gameID, $gameState.accessKey)
+					loading = false;
 				}}>
-					Start the game
+					{#if loading}
+						Hang on tight!
+					{:else}
+						Start the game
+					{/if}
 				</button>
 			{:else}
 				<span class="gray">

@@ -30,6 +30,10 @@ export async function GET(req): Promise<TypedResponse<{}>> {
 		}
 
 		await ref.child(`/data/host`).set(newHost);
+		await ref.update({
+			[`/truthteller`]: "",
+			[`/data/chosenArticle`]: "",
+		})
 	}
 
 	const truthteller = (await ref.child(`/truthteller`).get()).val();
