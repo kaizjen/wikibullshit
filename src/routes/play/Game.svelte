@@ -128,6 +128,15 @@
 		loading = false;		
 	}
 </script>
+<svelte:head>
+	<title>
+		{
+			gameInProgress ?
+			`${$gameState.chosenArticle} - Wikibullshit` :
+			"Wikibullshit"
+		}
+	</title>
+</svelte:head>
 <div class="game">
 	<div class="instructions">
 		{#if gameInProgress}

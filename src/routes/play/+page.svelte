@@ -39,7 +39,7 @@
 	import { setupGame } from "./gamestate";
 	import Player from "./Player.svelte";
 	import { setPortal } from "./teleport";
-    import Game from "./Game.svelte";
+	import Game from "./Game.svelte";
 
 	let [gameID, accessKey] = location.hash.slice(1).split('/');
 
