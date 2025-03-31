@@ -1,25 +1,28 @@
 import type { Access } from "$lib/apitypes";
+import { timestamp } from "$lib/util";
 import type { Reference } from "firebase-admin/database";
 
-export async function getIDFromAccessKey(ref: Reference, accessKey: string): Promise<string | undefined> {
-	const userID = (await ref.child(`/access/${accessKey}/id`).get()).val();
-	return userID;
+export function getIDFromAccessKey(game: Game, accessKey: string): string | undefined {
+	return game.access[accessKey]?.id;
+}
+export async function getIDFromAccessKeyRef(ref: Reference, accessKey: string): Promise<string | undefined> {
+	const access = (await ref.child(`/access/${accessKey}`).get()).val() as Access;
+	return access?.id;
 }
 
 /** @param ref - Should point to the /games/<GameID>/ */
-export async function verifyHost(ref: Reference, accessKey: string): Promise<null | string> {
-	const userID = await getIDFromAccessKey(ref, accessKey);
-	const host = (await ref.child(`/data/host`).get()).val()
+export function verifyHost(game: Game, accessKey: string): null | string {
+	const userID = getIDFromAccessKey(game, accessKey);
+	const host = game.data.host
 	return (userID === host) ? host : null;
 }
 
 
 /** @param ref - Should point to the /games/<GameID>/ */
-export async function kickPlayer(ref: Reference, userID: string, accessKey?: string): Promise<void> {
+export function kickPlayer(game: Game, ref: Reference, userID: string, accessKey?: string) {
 	if (!accessKey) {
-		const access = (await ref.child(`/access`).get()).val() as Record<string, Access>;
-		for (const key in access) {
-			const info = access[key];
+		for (const key in game.access) {
+			const info = game.access[key];
 			if (info.id == userID) {
 				accessKey = key
 			}
@@ -33,6 +36,7 @@ export async function kickPlayer(ref: Reference, userID: string, accessKey?: str
 	ref.update({
 		[`/data/players/${userID}`]: null,
 		[`/data/readies/${userID}`]: null,
-		[`/access/${accessKey}`]: null
+		[`/access/${accessKey}`]: null,
+		[`/last_interaction`]: timestamp()
 	})
 }

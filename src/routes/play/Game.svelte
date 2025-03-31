@@ -99,7 +99,7 @@
 	$: isEveryoneReady = Object.keys($gameState.users).every(uid => $gameState.users[uid].ready);
 
 	let myArticle = $gameState.myArticle;
-	
+
 	function setMyArticle() {
 		myArticle = $gameState.myArticle;
 	}
@@ -171,7 +171,7 @@
 						on:click={readyUp}
 					>
 						{#if amIReady}
-							WAIT, I'm not ready!!
+							Wait, I'm not ready!
 						{:else}
 							I'm ready
 						{/if}
@@ -198,11 +198,11 @@
 			{:else}
 				{#if $gameState.host == $gameState.me}
 					When all the players are ready, press the Big Blue Button™ below
-					to start the game! Then, it's all up to your skills of interrogation :)
+					to start the game!
 				{:else}
-					Pick an interesting article on Wikipedia, memorize it (just well enough) and
-					input its title into the field above (strip it of all parentheses and the like).
-					Then click the button and wait until the game starts.
+					Pick an interesting article, memorize it and
+					input its <i>title</i> into the field above.
+					Then click the "I'm ready" button and wait until the game starts.
 				{/if}
 			{/if}
 		</div>
@@ -216,7 +216,7 @@
 					<b>{host.name}</b>
 					{#if host.id == $gameState.me}
 						<i class="tip">
-							☜ Hey, you're the host!
+							☜ Woah, you're the host!
 						</i>
 					{:else}
 						<i class="tip">
@@ -256,7 +256,7 @@
 										{#if $gameState.users[userID].points == FUN}
 											☜ Despite everything, it's still you
 										{:else}
-											☜ Hey, that's you!
+											☜ That's you!
 										{/if}
 									{/if}
 								</i>

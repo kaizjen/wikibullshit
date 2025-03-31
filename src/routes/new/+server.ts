@@ -7,7 +7,7 @@ export async function GET(req): Promise<Response> {
 		return new Response(`
 			<html>
 				<head>
-					<title>Join this Wikibullshit game</title>
+					<title>New Wikibullshit game</title>
 				</head>
 				<body>
 					<span>We think you're a bot. If not, click <button id="b">here</button></span>

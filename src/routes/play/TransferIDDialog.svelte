@@ -2,7 +2,7 @@
 	.main {
 		padding: 16px;
 	}
-	.destructive {
+	.danger {
 		color: var(--color-destructive);
 	}
 	.bottom {
@@ -13,7 +13,7 @@
 </style>
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Dialog from "./Dialog.svelte";
+	import Dialog from "$lib/Dialog.svelte";
 	import { gameState } from "./gamestate";
 	import { transferHost } from "$lib/api";
 
@@ -35,12 +35,12 @@
 </script>
 <Dialog title="Make {$gameState.users[id].name} the new host?" on:close={() => dispatch('close')}>
 	<form action="" on:submit|preventDefault={go}>
-		<div class="main" class:destructive={!gameInProgress}>
+		<div class="main" class:danger={!gameInProgress}>
 			{#if gameInProgress}
 				You cannot transer the host until this round ends.
 				You can click the panic button to end it forcefully (no points will be awarded).
 			{:else}
-				Hey, wait, after you transfer the host, you'll just be a regular player, and will have to lie to your friends (evil!).
+				After you transfer the host, you'll become a regular player, and will have to lie to your friends (evil!).<br>
 				You won't get the host controls unless someone transfers the host back to you.
 			{/if}
 		</div>

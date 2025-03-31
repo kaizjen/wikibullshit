@@ -35,7 +35,7 @@
 <script lang="ts">
 	import Icon from "$lib/Icon.svelte";
 	import { createEventDispatcher } from "svelte";
-	import { teleport } from "./teleport";
+	import { teleport } from "$lib/teleport";
 	import { fade, scale } from "svelte/transition";
 	import { cubicOut } from "svelte/easing";
 

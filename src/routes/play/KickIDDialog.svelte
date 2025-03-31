@@ -13,7 +13,7 @@
 </style>
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Dialog from "./Dialog.svelte";
+	import Dialog from "$lib/Dialog.svelte";
 	import { gameState } from "./gamestate";
 	import { kick } from "$lib/api";
 

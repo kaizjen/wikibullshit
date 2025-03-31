@@ -6,8 +6,9 @@ import { error } from "@sveltejs/kit";
 export async function GET(req): Promise<TypedResponse<{}>> {
 	const { gameID, accessKey, userID } = req.params;
 	const ref = db.ref(`/games/${gameID}`);
+	const game = (await ref.get()).val() as Game;
 
-	const hostID = await verifyHost(ref, accessKey);
+	const hostID = await verifyHost(game, accessKey);
 	if (!hostID) {
 		return error(403, "E10; Only the host can kick players")
 	}
@@ -21,6 +22,6 @@ export async function GET(req): Promise<TypedResponse<{}>> {
 		[`/data/chosenArticle`]: "",
 	})
 
-	await kickPlayer(ref, userID);
+	await kickPlayer(game, ref, userID);
 	return respond({});
 }

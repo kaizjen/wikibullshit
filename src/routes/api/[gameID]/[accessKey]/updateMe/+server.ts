@@ -1,5 +1,5 @@
 import { db } from '$lib/server/firebase';
-import { getIDFromAccessKey } from '$lib/server/game.js';
+import { getIDFromAccessKey, getIDFromAccessKeyRef } from '$lib/server/game.js';
 import { respond, type TypedResponse } from '$lib/server/response.js';
 import { error } from '@sveltejs/kit';
 
@@ -9,7 +9,7 @@ export async function POST(req): Promise<TypedResponse<{}>> {
 
 	const ref = db.ref(`/games/${gameID}`);
 
-	const userID = await getIDFromAccessKey(ref, accessKey);
+	const userID = await getIDFromAccessKeyRef(ref, accessKey);
 	if (!userID) {
 		return error(403, "E9; You do not exist")
 	}

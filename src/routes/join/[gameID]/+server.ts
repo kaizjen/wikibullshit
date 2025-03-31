@@ -27,7 +27,7 @@ export async function GET(req): Promise<Response> {
 	const alreadyAccessKey = req.cookies.get('accessKey');
 
 	if (alreadyJoinedGame == req.params.gameID && alreadyAccessKey) {
-		return redirect(302, `/play/#${alreadyJoinedGame}/${alreadyAccessKey}`);
+		return redirect(302, `/play`);
 	}
 
 	const res = await req.fetch(`/api/${req.params.gameID}/joinGame`);
@@ -38,5 +38,5 @@ export async function GET(req): Promise<Response> {
 
 	const json = await res.json() as GamePlayer;
 
-	return redirect(302, `/play/#${json.gameID}/${json.key}`);
+	return redirect(302, `/play`);
 }

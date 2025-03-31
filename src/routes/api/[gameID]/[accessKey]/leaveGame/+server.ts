@@ -6,17 +6,18 @@ import { error } from '@sveltejs/kit';
 export async function GET(req): Promise<TypedResponse<{}>> {
 	const { gameID, accessKey } = req.params;
 	const ref = db.ref(`/games/${gameID}`);
+	const game = (await ref.get()).val() as Game;
 
-	const userID = await getIDFromAccessKey(ref, accessKey);
+	const userID = await getIDFromAccessKey(game, accessKey);
 	if (!userID) {
 		req.cookies.delete("gameID", { path: "/" });
 		req.cookies.delete("accessKey", { path: "/" });
 		return error(403, "E9; You do not exist")
 	}
 
-	const hostID = (await ref.child(`/data/host`).get()).val();
+	const hostID = game.data.host;
 	if (userID == hostID) {
-		const players = (await ref.child(`/data/players`).get()).val();
+		const players = game.data.players;
 		const ids = Object.keys(players);
 		let newHost = ids[0]
 		if (newHost == userID) {
@@ -36,7 +37,7 @@ export async function GET(req): Promise<TypedResponse<{}>> {
 		})
 	}
 
-	const truthteller = (await ref.child(`/truthteller`).get()).val();
+	const truthteller = game.truthteller;
 	if (truthteller == userID) {
 		await ref.update({
 			[`/truthteller`]: "",
@@ -44,7 +45,7 @@ export async function GET(req): Promise<TypedResponse<{}>> {
 		})
 	}
 
-	await kickPlayer(ref, userID, accessKey);
+	await kickPlayer(game, ref, userID, accessKey);
 
 	req.cookies.delete("gameID", { path: "/" });
 	req.cookies.delete("accessKey", { path: "/" });

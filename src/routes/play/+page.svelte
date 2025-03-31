@@ -38,14 +38,16 @@
   import GameId from "./GameID.svelte";
 	import { setupGame } from "./gamestate";
 	import Player from "./Player.svelte";
-	import { setPortal } from "./teleport";
+	import { setPortal } from "$lib/teleport";
 	import Game from "./Game.svelte";
+
+	export let data;
 
 	let [gameID, accessKey] = location.hash.slice(1).split('/');
 
 	if (!gameID || !accessKey) {
-		gameID = localStorage.getItem('gameID') ?? undefined as any;
-		accessKey = localStorage.getItem('accessKey') ?? undefined as any;
+		gameID = data.gameID || '';
+		accessKey = data.accessKey || '';
 	}
 
 	if (!gameID || !accessKey) {

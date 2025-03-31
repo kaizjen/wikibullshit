@@ -14,7 +14,7 @@
 </style>
 <script>
 	import { createEventDispatcher } from "svelte";
-	import Dialog from "./Dialog.svelte";
+	import Dialog from "$lib/Dialog.svelte";
 	import { gameState } from "./gamestate";
 	import { updateMe } from "$lib/api";
 

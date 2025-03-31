@@ -9,7 +9,7 @@ export async function GET(req): Promise<TypedResponse<{}>> {
 	const { gameID, accessKey } = req.params;
 	const ref = db.ref(`/games/${gameID}`);
 
-	const hostID = await verifyHost(ref, accessKey);
+	const hostID = verifyHost((await ref.get()).val(), accessKey);
 	if (!hostID) {
 		return error(403, "E15; Only the host can reset the game")
 	}

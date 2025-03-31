@@ -96,7 +96,7 @@
 	import ChangeNameDialog from "./ChangeNameDialog.svelte";
 	import { gameState, unsubscribe } from "./gamestate";
 	import KickIdDialog from "./KickIDDialog.svelte";
-	import { teleport } from "./teleport";
+	import { teleport } from "$lib/teleport";
 	import TransferIdDialog from "./TransferIDDialog.svelte";
 
 	$: me = $gameState.users[$gameState.me];
