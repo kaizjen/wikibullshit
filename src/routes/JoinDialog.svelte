@@ -52,11 +52,16 @@
 			dispatch('error', "Invalid code.")
 			return;
 		}
+		code = code.toUpperCase();
 		const res = await joinGame(code);
 		if (!ok(res)) {
 			loading = false;
 			dispatch('close')
-			dispatch('error', res.error + '')
+			try {
+				dispatch('error', JSON.parse(res.error).message.split('; ')[1] || 'unknown error')
+			} catch (_) {
+				dispatch('error', res.error + '')
+			}
 			return;
 		}
 		loading = false

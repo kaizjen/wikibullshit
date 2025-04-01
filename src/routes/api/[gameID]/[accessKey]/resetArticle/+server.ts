@@ -5,7 +5,7 @@ import { type TypedResponse, respond } from "$lib/server/response";
 import { error } from "@sveltejs/kit";
 import { ServerValue } from "firebase-admin/database";
 
-export async function GET(req): Promise<TypedResponse<{}>> {
+export async function POST(req): Promise<TypedResponse<{}>> {
 	const { gameID, accessKey } = req.params;
 	const ref = db.ref(`/games/${gameID}`);
 

@@ -111,12 +111,12 @@
 			How to play
 		</h2>
 		<p>
-			After creating a game, you will see the room code and a button to copy the join link in the top left,
+			After creating a game, you will see the room code and a button to copy the join link in the top left corner,
 			after the "Wikibullshit" logo. Using this link, other people can join the game as players. You need a minimum of
 			<b>three people</b> to play the game.
 		</p>
 		<p>
-			In the top left there is a menu showing your profile. You can use it to change your name or leave the game. The host
+			In the top right corner there is a menu showing your profile. You can use it to change your name or leave the game. The host
 			can use it to kick players out or to transfer the host role onto them.
 		</p>
 		<p>

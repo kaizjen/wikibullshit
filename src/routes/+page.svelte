@@ -69,7 +69,11 @@
 		loading = false;
 		if (!ok(res)) {
 			console.error("can't create new game:", res.error);
-			error = `Can't create a game: ${res.error}`
+			try {
+				error = `Can't create a game: ${JSON.parse(res.error).message.split('; ')[1] || 'unknown error'}`
+			} catch (_) {
+				error = `Can't create a game: ${res.error}`
+			}
 		}
 		goto('/play');
 	}

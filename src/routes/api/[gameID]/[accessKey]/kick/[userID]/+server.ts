@@ -3,7 +3,7 @@ import { kickPlayer, verifyHost } from "$lib/server/game";
 import { type TypedResponse, respond } from "$lib/server/response";
 import { error } from "@sveltejs/kit";
 
-export async function GET(req): Promise<TypedResponse<{}>> {
+export async function POST(req): Promise<TypedResponse<{}>> {
 	const { gameID, accessKey, userID } = req.params;
 	const ref = db.ref(`/games/${gameID}`);
 	const game = (await ref.get()).val() as Game;

@@ -7,8 +7,12 @@ import { randomBytes } from "crypto";
 //@ts-ignore
 import njr from "name-jam-rator";
 
-export async function GET(req): Promise<TypedResponse<GamePlayer>> {
+export async function POST(req): Promise<TypedResponse<GamePlayer>> {
 	const gameID = req.params.gameID;
+	if (gameID == "gameID") {
+		return error(404, "E1; Game does not exist")
+	}
+
 	cleanupGames(db.ref('/games'));
 	const ref = db.ref(`/games/${gameID}`);
 	const game = (await ref.get()).val() as Game;

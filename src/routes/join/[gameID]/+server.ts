@@ -14,7 +14,7 @@ export async function GET(req): Promise<Response> {
 					<script>
 						const b = document.getElementById("b");
 						b.onclick = async () => {
-							const res = await (await fetch("/api/${req.params.gameID}/joinGame")).json();
+							const res = await (await fetch("/api/${req.params.gameID}/joinGame", { method: "POST" })).json();
 							location.href = "/play#" + res.gameID + "/" + res.key
 						}
 					</script>
@@ -30,7 +30,7 @@ export async function GET(req): Promise<Response> {
 		return redirect(302, `/play`);
 	}
 
-	const res = await req.fetch(`/api/${req.params.gameID}/joinGame`);
+	const res = await req.fetch(`/api/${req.params.gameID}/joinGame`, { method: "POST" });
 
 	if (!res.ok) {
 		return res;

@@ -14,7 +14,7 @@ export async function GET(req): Promise<Response> {
 					<script>
 						const b = document.getElementById("b");
 						b.onclick = async () => {
-							const res = await (await fetch("/api/newGame")).json();
+							const res = await (await fetch("/api/newGame", { method: "POST" })).json();
 							location.href = "/play#" + res.gameID + "/" + res.key
 						}
 					</script>
@@ -23,7 +23,7 @@ export async function GET(req): Promise<Response> {
 		`, { headers: { 'Content-Type': "text/html" } });
 	}
 
-	const res = await req.fetch(`/api/newGame`);
+	const res = await req.fetch(`/api/newGame`, { method: "POST" });
 
 	if (!res.ok) {
 		return res;
