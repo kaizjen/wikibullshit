@@ -97,7 +97,7 @@
 		</button>
 		<span>or</span>
 		<button class="button" on:click={() => { joinDialog = !joinDialog; }}>
-			Join a game
+			Join game
 		</button>
 	</div>
 	<div>
