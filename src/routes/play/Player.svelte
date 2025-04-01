@@ -94,7 +94,7 @@
 	import Icon from "$lib/Icon.svelte";
     import { tick } from "svelte";
 	import ChangeNameDialog from "./ChangeNameDialog.svelte";
-	import { gameState, unsubscribe } from "./gamestate";
+	import { gameState, stopGame, unsubscribe } from "./gamestate";
 	import KickIdDialog from "./KickIDDialog.svelte";
 	import { teleport } from "$lib/teleport";
 	import TransferIdDialog from "./TransferIDDialog.svelte";
@@ -208,6 +208,7 @@
 					goto('/');
 					unsubscribe();
 					await leaveGame($gameState.gameID, $gameState.accessKey);
+					stopGame();
 				}}>
 					<Icon>logout</Icon>
 					Leave game

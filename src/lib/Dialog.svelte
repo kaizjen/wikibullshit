@@ -17,7 +17,8 @@
 		flex-direction: column;
 		box-shadow: 1px 1px 6px 0px var(--background-color-backdrop-dark);
 		min-width: 20vw;
-		max-width: 40vw;
+		max-width: 40rem;
+		max-height: 90vh;
 		border-radius: 2px;
 	}
 	.header {
@@ -27,6 +28,9 @@
 		padding: 8px;
 		padding-inline-start: 16px;
 		border-bottom: 1px solid var(--border-color-subtle,#c8ccd1);
+	}
+	.content {
+		overflow: auto;
 	}
 	h4 {
 		margin: 0;

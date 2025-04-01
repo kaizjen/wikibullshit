@@ -225,7 +225,7 @@
 					{/if}
 				</div>
 				<div class="otherinfo">
-					<b> {host.points}¤ </b>
+					<b> {host.points} p. </b>
 				</div>
 			</div>
 		{/if}
@@ -299,7 +299,7 @@
 										{/if}
 									</span>
 									<b>
-										{user.points}¤
+										{user.points} p.
 									</b>
 								{/if}
 							</div>

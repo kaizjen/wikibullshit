@@ -43,7 +43,7 @@ type GameState = {
 	myArticle: string
 };
 
-export const gameState = new Gettable<GameState>({
+const defaultState = {
 	real: false,
 	gameID: "------",
 	accessKey: "-this-guy-is-NOT-real-",
@@ -60,7 +60,9 @@ export const gameState = new Gettable<GameState>({
 	me: "------",
 	chosenArticle: "",
 	myArticle: ""
-});
+}
+
+export const gameState = new Gettable<GameState>(structuredClone(defaultState));
 
 //@ts-ignore
 globalThis['gameState'] = gameState;
@@ -92,7 +94,7 @@ export async function setupGame(gameID: string, accessKey: string, _firstTime?: 
 		const gameRef = ref(getDatabase(firebase), `/games/${gameID}`);
 		const myAccessRef = child(gameRef, `/access/${accessKey}`);
 		const dataRef = child(gameRef, `/data`);
-	
+
 		const access = (await get(myAccessRef)).val() as Access | undefined;
 
 		if (!access) {
@@ -101,10 +103,10 @@ export async function setupGame(gameID: string, accessKey: string, _firstTime?: 
 			location.href = '/?thrown=' + (ok(res) ? 'unknown' : 'kicked')
 			return new FailedResult("Kicked out?");
 		}
-	
+
 		myArticleRef = child(myAccessRef, "/article");
 		myReadyRef = child(dataRef, `/readies/${access.id}`);
-	
+
 		let unsubscribeData = onValue(dataRef, async snapshot => {
 			const data = snapshot.val() as GameData;
 			console.log("data:onValue", data)
@@ -113,7 +115,7 @@ export async function setupGame(gameID: string, accessKey: string, _firstTime?: 
 			if (!data) {
 				return;
 			}
-	
+
 			gs.chosenArticle = data.chosenArticle;
 			gs.host = data.host;
 			gs.users = {};
@@ -127,7 +129,7 @@ export async function setupGame(gameID: string, accessKey: string, _firstTime?: 
 					ready: data.readies[userID] ?? false
 				}
 			}
-	
+
 			gs.real = true;
 			gs.me = access.id;
 			gs.myArticle = access.article;
@@ -142,7 +144,7 @@ export async function setupGame(gameID: string, accessKey: string, _firstTime?: 
 				location.href = '/?thrown=' + (ok(res) ? 'unknown' : 'kicked');
 				return;
 			}
-	
+
 			console.log("[gamestate] Game state updated!")
 			gameState.update();
 		})
@@ -154,7 +156,7 @@ export async function setupGame(gameID: string, accessKey: string, _firstTime?: 
 			console.log("[gamestate] Article updated to: ", myArticle)
 			gameState.update();
 		})
-	
+
 		unsubscribe = () => { unsubscribeData(); unsubscribeArticle(); unsubscribe = () => {}; }
 
 		return null;
@@ -179,4 +181,9 @@ export async function changeArticle(to: string): Promise<Result<null>> {
 
 	await set(myArticleRef, to);
 	return null;
+}
+
+export function stopGame() {
+	Object.assign(gameState.get(), defaultState);
+	gameState.update();
 }
