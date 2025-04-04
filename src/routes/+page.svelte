@@ -74,6 +74,7 @@
 			} catch (_) {
 				error = `Can't create a game: ${res.error}`
 			}
+			return;
 		}
 		goto('/play');
 	}

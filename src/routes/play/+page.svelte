@@ -57,7 +57,7 @@
 		setupGame(gameID, accessKey, true).then(result => {
 			if (!ok(result)) {
 				goto("/?thrown=gameFinished");
-	
+
 			} else {
 				localStorage.setItem('gameID', gameID);
 				localStorage.setItem('accessKey', accessKey);
