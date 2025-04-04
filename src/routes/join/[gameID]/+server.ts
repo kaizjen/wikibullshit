@@ -33,7 +33,7 @@ export async function GET(req): Promise<Response> {
 	const res = await req.fetch(`/api/${req.params.gameID}/joinGame`, { method: "POST" });
 
 	if (!res.ok) {
-		return res;
+		return redirect(302, `/?thrown=no_game`);
 	}
 
 	const json = await res.json() as GamePlayer;

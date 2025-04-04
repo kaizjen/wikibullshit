@@ -61,6 +61,19 @@
 
 	onMount(() => {
 		setPortal(portal);
+		const thrown = new URL(location.href).searchParams?.get("thrown");
+		if (thrown) {
+			switch (thrown) {
+				case "no_game": {
+					error = "This game has ended or has never existed."
+					break;
+				}
+				case "kicked": {
+					error = "Kicked."
+					break;
+				}
+			}
+		}
 	})
 
 	async function startGame() {
@@ -78,6 +91,8 @@
 		}
 		goto('/play');
 	}
+
+	
 </script>
 
 <svelte:head>
