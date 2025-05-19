@@ -187,7 +187,7 @@
 								<div class="otherplayer">
 									<div class="otherplayername">
 										<Icon>person</Icon>
-										{user.name}
+										<span>{user.name}</span>
 									</div>
 									<div class="personctrl">
 										<button class="hollow" title="Transfer the host" on:click={() => transferIDDialog = userID}>

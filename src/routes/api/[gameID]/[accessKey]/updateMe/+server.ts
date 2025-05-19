@@ -17,6 +17,7 @@ export async function POST(req): Promise<TypedResponse<{}>> {
 	const updates: Record<string, any> = {};
 	if (json.name) {
 		if (typeof json.name != "string") return error(400, "E15; name must be a string");
+		if (json.name.length > 48) return error(400, "E15; name must not be larger than 48 characters");
 		updates[`/data/players/${userID}/name`] = json.name;
 	}
 	if (json.pic) {

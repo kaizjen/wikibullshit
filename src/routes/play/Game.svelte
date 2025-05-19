@@ -47,6 +47,7 @@
 	.playerinfo {
 		display: flex;
  		align-items: center;
+		min-width: 0;
 	}
 	.username {
 		overflow: hidden;

@@ -123,9 +123,9 @@
 
 <footer>
 	<div>
-		Made with &hearts; by kaizjen
+		Made with &hearts; by whezard
 		•
-		<a href="https://github.com/kaizjen/wikibullshit" target="_blank">
+		<a href="https://github.com/whzard/wikibullshit" target="_blank">
 			Source code
 			<img src="/ext.svg" alt="external link">
 		</a>

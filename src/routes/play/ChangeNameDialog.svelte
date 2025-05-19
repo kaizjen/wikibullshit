@@ -11,6 +11,9 @@
 		margin: 0;
 		margin-bottom: 8px;
 	}
+	.err {
+		color: var(--color-destructive);
+	}
 </style>
 <script>
 	import { createEventDispatcher } from "svelte";
@@ -21,6 +24,7 @@
 	let name = $gameState.users[$gameState.me].name;
 
 	let loading = false;
+	$: invalid = name.length >= 48;
 
 	const dispatch = createEventDispatcher();
 
@@ -37,9 +41,14 @@
 		<div class="main">
 			<h5>Enter your new name:</h5>
 			<input disabled={loading} type="text" bind:value={name}>
+			{#if invalid}
+				<span class="err">
+					Your name can't be longer than 48 characters.
+				</span>
+			{/if}
 		</div>
 		<div class="bottom">
-			<button disabled={loading} class="accent" on:click={go}>
+			<button disabled={loading || invalid} class="accent" on:click={go}>
 				{loading ? "Saving" : "Save"}
 			</button>
 		</div>
